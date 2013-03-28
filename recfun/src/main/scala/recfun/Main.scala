@@ -26,10 +26,12 @@ object Main {
     def balanceIter(chars: List[Char], balance: Int): Boolean = {
       if (balance < 0) false
       else if (chars.isEmpty) balance == 0
-      else balanceIter(chars.slice(1, chars.length), (
-        if (chars.head == '(') balance + 1
-        else if (chars.head == ')') balance - 1
-        else balance))
+      else balanceIter(chars.tail,
+        chars.head match {
+          case '(' => balance + 1
+          case ')' => balance - 1
+          case _ => balance
+        })
     }
 
     balanceIter(chars, 0)
@@ -38,5 +40,14 @@ object Main {
   /**
    * Exercise 3
    */
-  def countChange(money: Int, coins: List[Int]): Int = ???
+  def countChange(money: Int, coins: List[Int]): Int = {
+    def countIter(counted: Int, coins: List[Int]): Int = {
+      if (counted == money) 1
+      else if (counted > money) 0
+      else if (coins.isEmpty) 0
+      else countIter(counted + coins.head, coins) + countIter(counted, coins.tail)
+    }
+
+    if (money > 0) countIter(0, coins) else 0
+  }
 }
