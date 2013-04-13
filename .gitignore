@@ -1,6 +1,8 @@
 .metadata
 .cache
 
+.worksheet
+
 *.class
 *.log
 
