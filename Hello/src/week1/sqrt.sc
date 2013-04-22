@@ -18,5 +18,8 @@ object sqrt {
     sqrtIter(1)
   }                                               //> sqrt: (x: Double)Double
   
-  sqrt(2)                                         //> res1: Double = 1.4142156862745097
+  1                                               //> res1: Int(1) = 1
+  
+  sqrt(2)                                         //> res2: Double = 1.4142156862745097
+  sqrt(3)                                         //> res3: Double = 1.7321428571428572
 }
