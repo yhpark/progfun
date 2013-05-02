@@ -120,8 +120,7 @@ object Huffman {
     trees match {
       case t1 :: t2 :: tail =>
         val fork = new Fork(t1, t2, chars(t1) ::: chars(t2), weight(t1) + weight(t2))
-        val idx = tail.indexWhere((tree: CodeTree) => weight(tree) > fork.weight)
-        tail.slice(0, idx) ::: List(fork) ::: tail.slice(idx, tail.length)
+        (fork :: tail) sortBy ((tree: CodeTree) => weight(tree))
       case _ => trees
     }
 
@@ -146,7 +145,6 @@ object Huffman {
   def until(cond: List[CodeTree] => Boolean, proc: List[CodeTree] => List[CodeTree])(trees: List[CodeTree]): List[CodeTree] =
     if (cond(trees)) trees
     else until(cond, proc)(proc(trees))
-
   /**
    * This function creates a code tree which is optimal to encode the text `chars`.
    *

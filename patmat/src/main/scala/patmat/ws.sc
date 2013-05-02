@@ -27,16 +27,18 @@ object ws {
   makeOrderedLeafList(times(c))                   //> res2: List[patmat.Huffman.Leaf] = List(Leaf(o,1), Leaf(f,1), Leaf(x,2), Leaf
                                                   //| (t,2), Leaf(s,4), Leaf(m,4), Leaf(e,4), Leaf(T,6))
 
-  createCodeTree(c)                               //> res3: patmat.Huffman.CodeTree = Fork(Fork(Fork(Fork(Leaf(o,1),Leaf(f,1),List
-                                                  //| (o, f),2),Leaf(m,4),List(o, f, m),6),Leaf(e,4),List(o, f, m, e),10),Fork(Lea
-                                                  //| f(x,2),Leaf(t,2),List(x, t),4),List(o, f, m, e, x, t),14)
+  createCodeTree(c)                               //> res3: patmat.Huffman.CodeTree = Fork(Fork(Leaf(e,4),Fork(Leaf(t,2),Fork(Fork
+                                                  //| (Leaf(o,1),Leaf(f,1),List(o, f),2),Leaf(x,2),List(o, f, x),4),List(t, o, f, 
+                                                  //| x),6),List(e, t, o, f, x),10),Fork(Leaf(T,6),Fork(Leaf(s,4),Leaf(m,4),List(s
+                                                  //| , m),8),List(T, s, m),14),List(e, t, o, f, x, T, s, m),24)
   val leaflist = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))
                                                   //> leaflist  : List[patmat.Huffman.Leaf] = List(Leaf(e,1), Leaf(t,2), Leaf(x,4)
                                                   //| )
   combine(leaflist)                               //> res4: List[patmat.Huffman.CodeTree] = List(Fork(Leaf(e,1),Leaf(t,2),List(e, 
-                                                  //| t),3))
+                                                  //| t),3), Leaf(x,4))
   val tree = createCodeTree("ab".toList)          //> tree  : patmat.Huffman.CodeTree = Fork(Leaf(b,1),Leaf(a,1),List(b, a),2)
   convert(tree)                                   //> res5: patmat.Huffman.CodeTable = List((b,List(0)), (a,List(1)))
   makeOrderedLeafList(times("ab".toList))         //> res6: List[patmat.Huffman.Leaf] = List(Leaf(b,1), Leaf(a,1))
   encode(tree)("ab".toList)                       //> res7: List[patmat.Huffman.Bit] = List(1, 0)
+   "1111000101".toList.map(c => c - '0')          //> res8: List[Int] = List(1, 1, 1, 1, 0, 0, 0, 1, 0, 1)
 }
