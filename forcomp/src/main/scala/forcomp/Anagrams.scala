@@ -43,7 +43,7 @@ object Anagrams {
 
   /** Converts a sentence into its character occurrence list. */
   def sentenceOccurrences(s: Sentence): Occurrences =
-    s flatMap (w => wordOccurrences(w))
+    wordOccurrences(s.foldLeft("")((m, w) => m + w))
 
   /**
    * The `dictionaryByOccurrences` is a `Map` from different occurrences to a sequence of all
@@ -104,7 +104,7 @@ object Anagrams {
         combinations(occurrences.drop(idx + 1))
           .map(ox => if (i == 0) ox else (c, i) :: ox)
       }
-    }.flatten
+    }.flatten.distinct
   }
 
   /**
@@ -120,8 +120,15 @@ object Anagrams {
    */
   def subtract(x: Occurrences, y: Occurrences): Occurrences =
     if (x.isEmpty) Nil
-    else if (x.head equals y.head) subtract(x.tail, y.tail)
-    else x.head :: subtract(x.tail, y)
+    else if (y.isEmpty) x
+    else {
+      val (xc, xi) = x.head
+      val (yc, yi) = y.head
+      if (xc == yc) {
+        if (xi - yi > 0) (xc, xi - yi) :: subtract(x.tail, y.tail)
+        else subtract(x.tail, y.tail)
+      } else x.head :: subtract(x.tail, y)
+    }
 
   /**
    * Returns a list of all anagram sentences of the given sentence.
@@ -164,22 +171,20 @@ object Anagrams {
    *
    *  Note: There is only one anagram of an empty sentence.
    */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = ??? 
-//  {
-//    def occurAnagrams(occur: Occurrences): List[Word] = {
-//      for {
-//        co <- combinations(occur)
-//        word <- dictionaryByOccurrences(co)
-//      } yield {
-//        word :: occurAnagrams(subtract(occur, co))
-//      }
-//    }.flatten
-//    
-//    if (sentence == Nil) Nil
-//    else {
-//      val occur = sentenceOccurrences(sentence)
-//      occurAnagrams(occur)
-//    }
-//  }
+  def occurAnagrams(occur: Occurrences): List[Sentence] = occur match {
+    case Nil => List(Nil)
+    case _ => {
+      for {
+        co <- combinations(occur)
+        word <- Anagrams.dictionaryByOccurrences.get(co) match {
+          case Some(list) => list
+          case None => Nil
+        }
+      } yield occurAnagrams(subtract(occur, co)).map(sent => word :: sent)
+    }.flatten
+  }
+
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] =
+    occurAnagrams(sentenceOccurrences(sentence))
 
 }
