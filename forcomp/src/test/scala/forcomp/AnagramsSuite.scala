@@ -39,6 +39,10 @@ class AnagramsSuite extends FunSuite {
   test("word anagrams: player") {
     assert(wordAnagrams("player").toSet === Set("parley", "pearly", "player", "replay"))
   }
+  
+  test("word anagrams: nonexist") {
+    assert(wordAnagrams("nonexist").toSet === Set())
+  }
 
 
 
