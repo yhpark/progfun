@@ -39,6 +39,32 @@ class BloxorzSuite extends FunSuite {
 
     val optsolution = List(Right, Right, Down, Right, Right, Right, Down)
   }
+  
+  test("finding neighbors") {
+    new Level1 {
+      val ans = Set(
+        (Block(Pos(1, 2), Pos(1, 3)), List(Right, Left, Up)),
+        (Block(Pos(2, 1), Pos(3, 1)), List(Down, Left, Up)))
+      assert(neighborsWithHistory(Block(Pos(1, 1), Pos(1, 1)), List(Left, Up)).toSet === ans)
+    }
+  }
+
+  test("avoiding circles") {
+    new Level1 {
+      val cal = newNeighborsOnly(
+        Set(
+          (Block(Pos(1, 2), Pos(1, 3)), List(Right, Left, Up)),
+          (Block(Pos(2, 1), Pos(3, 1)), List(Down, Left, Up))).toStream,
+          
+        Set(Block(Pos(1, 2), Pos(1, 3)), Block(Pos(1, 1), Pos(1, 1)))).toSet
+
+      val ans = Set(
+        (Block(Pos(2, 1), Pos(3, 1)), List(Down, Left, Up))).toStream.toSet
+      
+        
+      assert(cal === ans)
+    }
+  }
 
   test("terrain function level 1") {
     new Level1 {
@@ -52,9 +78,10 @@ class BloxorzSuite extends FunSuite {
       assert(startPos == Pos(1,1))
     }
   }
-
+  
   test("optimal solution for level 1") {
     new Level1 {
+      println(pathsFromStart.take(10).toList)
       assert(solve(solution) == Block(goal, goal))
     }
   }
